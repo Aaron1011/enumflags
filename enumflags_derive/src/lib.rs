@@ -174,6 +174,12 @@ fn gen_enumflags(ident: &Ident, item: &DeriveInput, data: &DataEnum, gen_std: bo
         span =>
         mod #scope_ident {
             extern crate #std_path;
+
+            // We're inside a new module named '#scope_ident',
+            // so we need to import the original type definition
+            // from the parent
+            use super::#ident;
+
             impl #std_path::ops::Not for #ident{
                 type Output = ::enumflags::BitFlags<#ident>;
                 fn not(self) -> Self::Output {
